@@ -28,11 +28,9 @@ print (os.path.join(os.getcwd(), 'test'))
 print (__file__)
 
 from flask import Flask, send_file, render_template, request, redirect, url_for
-# from werkzeug import secure_filename
-
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/Src/templates/index.html") # CHECK THIS line
 def hello_world():
     file_name = os.path.join(dirname, 'rrr.png')
     print (file_name)
