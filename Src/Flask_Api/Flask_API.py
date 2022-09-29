@@ -1,6 +1,4 @@
 # TO RUN: flask  --app Flask_app --debug run --port 7777
-from re import U
-from tracemalloc import start
 from flask import *
 import json
 
