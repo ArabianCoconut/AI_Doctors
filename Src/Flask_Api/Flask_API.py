@@ -2,7 +2,6 @@
 from flask import *
 import json
 
-from sklearn.utils import resample
 web = Flask(__name__)
 data_rec = {}
 def start_app():
