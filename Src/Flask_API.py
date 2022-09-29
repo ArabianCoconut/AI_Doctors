@@ -9,7 +9,7 @@ def start_app():
 
 @web.route('/', methods=['GET'])
 def index():
-    return render_template('index.html')
+    return render_template('Src/templates/index.html')
 
 @web.route("/data", methods=['Post'])
 def data():  # DATA CAPTURE insert all form capture data.
