@@ -7,9 +7,9 @@ web = Flask(__name__)
 def start_app():
     web.run(host="localhost",debug=True,port=7770)
 
-# @web.route('/', methods=['GET'])
-# def index():
-#     return render_template('index.html')
+@web.route('/', methods=['GET'])
+def index():
+    return render_template('index.html')
 
 @web.route("/data", methods=['Post'])
 def data():
