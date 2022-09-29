@@ -11,7 +11,7 @@
     <form action = "http://localhost:5000/uploader" method = "POST" enctype = "multipart/form-data">
          <select name="type">
             <option value="test">Test</option>
-            <option value="train">Train</option>
+            <!-- <option value="train">Train</option> -->
          </select>
          <input type = "file" name = "file[]" multiple ccept="image/png"/>
          <input type = "submit"/>
@@ -20,6 +20,6 @@
     <br><br>
     <hr>
     <br><br>
-    <a href="{{ url_for('start') }}">Start</a>
+    <a href="{{ url_for('RoundTest') }}">Start test</a>
   </body>
 </html>

@@ -30,7 +30,7 @@ print (__file__)
 from flask import Flask, send_file, render_template, request, redirect, url_for
 app = Flask(__name__)
 
-@app.route("/Src/templates/index.html") # CHECK THIS line
+@app.route("/") # CHECK THIS line
 def hello_world():
     file_name = os.path.join(dirname, 'rrr.png')
     print (file_name)
@@ -38,13 +38,35 @@ def hello_world():
 
 @app.route("/start", methods = ['GET'])
 def start():
-    try:
-        start()
-    except:
-        return redirect('/error')
-    file_name = os.path.join(dirname, 'rrr.png')
-    print (file_name)
-    return render_template("show.html", title='AI', file_name = file_name)
+#     try:
+        train()
+        # start()
+#     except:
+#         return redirect('/error')
+#     file_name = os.path.join(dirname, 'rrr.png')
+#     print (file_name)
+#     return render_template("show.html", title='AI', file_name = file_name)
+        # return render_template("show.html", title='AI', file_name = "sss")
+        return "sss"
+
+@app.route("/test", methods = ['GET'])
+def RoundTest():
+#     try:
+        
+        # start()
+#     except:
+#         return redirect('/error')
+#     file_name = os.path.join(dirname, 'rrr.png')
+#     print (file_name)
+#     return render_template("show.html", title='AI', file_name = file_name)
+        # return render_template("show.html", title='AI', file_name = "sss")
+        return test()
+
+
+@app.route("/train", methods = ['GET'])
+def routeTrain():
+        train()
+        return "Training Done"
 
 @app.route('/uploader', methods = ['GET', 'POST'])
 def upload_file():
@@ -125,9 +147,32 @@ sgd = keras.optimizers.SGD(lr=0.01, decay=1e-5, momentum=0.7, nesterov=True)
 model.compile(optimizer=sgd,
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
+def train():
+        # os.exe
+        (train_images, train_labels) = load_image_dataset(os.path.join(dirname, 'static/train'), maxsize)
+        train_images = train_images / 255.0
+        model.fit(train_images, train_labels, epochs=500)
+        train_loss, train_acc = model.evaluate(train_images, train_labels)
+        print('Train accuracy:', train_acc,train_loss)
+
+def test():
+        # os.exe
+        (test_images, test_labels) = load_image_dataset(os.path.join(dirname, 'static/test'), maxsize)
+        test_images = test_images / 255.0
+        test_loss, test_acc = model.evaluate(test_images, test_labels)
+        predictions = model.predict(test_images)
+
+        class_names=['Healthy Teeth','Broken Teeth']
+        label = np.argmax(predictions, axis = 1)
+
+
+
+        # return "ACC: " + float(str(test_acc)) + " - LOSS: " + float(str(test_loss))
+        return class_names[label[0]]
+
 
 def start():
-        os.exe
+        # os.exe
         (test_images, test_labels) = load_image_dataset(os.path.join(dirname, 'static/test'), maxsize)
         (train_images, train_labels) = load_image_dataset(os.path.join(dirname, 'static/train'), maxsize)
         train_images = train_images / 255.0
