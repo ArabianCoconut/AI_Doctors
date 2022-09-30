@@ -12,8 +12,6 @@ import matplotlib.pyplot as plt
 
 import PIL
 from PIL import Image
-<<<<<<< HEAD
-=======
 import os
 import glob
 from io import BytesIO
