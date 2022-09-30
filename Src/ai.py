@@ -148,7 +148,6 @@ model.compile(optimizer=sgd,
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 def train():
-        # os.exe
         (train_images, train_labels) = load_image_dataset(os.path.join(dirname, 'static/train'), maxsize)
         train_images = train_images / 255.0
         model.fit(train_images, train_labels, epochs=500)
@@ -156,7 +155,6 @@ def train():
         print('Train accuracy:', train_acc,train_loss)
 
 def test():
-        # os.exe
         (test_images, test_labels) = load_image_dataset(os.path.join(dirname, 'static/test'), maxsize)
         test_images = test_images / 255.0
         test_loss, test_acc = model.evaluate(test_images, test_labels)
@@ -172,7 +170,6 @@ def test():
 
 
 def start():
-        # os.exe
         (test_images, test_labels) = load_image_dataset(os.path.join(dirname, 'static/test'), maxsize)
         (train_images, train_labels) = load_image_dataset(os.path.join(dirname, 'static/train'), maxsize)
         train_images = train_images / 255.0
