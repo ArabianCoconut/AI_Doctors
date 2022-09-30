@@ -9,7 +9,7 @@ import tensorflow as tf
 from tensorflow import keras
 
 # Helper libraries
-import numpy as np
+import numpy as np  
 import matplotlib.pyplot as plt
 import glob, os
 import re
@@ -183,13 +183,13 @@ def everything():
     maxsize_w, maxsize_h = maxsize
 
     (train_images, train_labels) = load_image_dataset(
-        path_dir='D:/Programming/Github_Repo/AI_Doctors/Src/static/train',
+        path_dir= os.path.join(dirname, 'static/train'),
         maxsize=maxsize,
         reshape_size=(maxsize_w, maxsize_h, 1),
         invert_image=False)
 
     (test_images, test_labels) = load_image_dataset(
-        path_dir='D:/Programming/Github_Repo/AI_Doctors/Src/static/test',
+        path_dir= os.path.join(dirname, 'static/test'),
         maxsize=maxsize,
         reshape_size=(maxsize_w, maxsize_h, 1),
         invert_image=False)

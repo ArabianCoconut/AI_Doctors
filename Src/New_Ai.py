@@ -12,6 +12,12 @@ import matplotlib.pyplot as plt
 import PIL
 from PIL import Image
 
+dirname = os.path.dirname(__file__)
+print (os.getcwd())
+print (dirname)
+print (os.path.join(os.getcwd(), 'test'))
+print (__file__)
+
 # Use Pillow library to convert an input jpeg to a 8 bit grey scale image array for processing.
 def jpeg_to_8_bit_greyscale(path, maxsize):
 	img = Image.open(path).convert('L')   # convert image to 8-bit grayscale
@@ -77,32 +83,32 @@ def load_test_set(path_dir, maxsize):
 maxsize = 50, 50
 maxsize_w, maxsize_h = maxsize
 
-(train_images, train_labels) = load_image_dataset(
-	path_dir='D:/Programming/Github_Repo/AI_Doctors/Src/static/train',
-	maxsize=maxsize,
-	reshape_size=(maxsize_w, maxsize_h, 1),
-	invert_image=False)
+# (train_images, train_labels) = load_image_dataset(
+# 	path_dir = os.path.join(dirname, 'static/train'),
+# 	maxsize=maxsize,
+# 	reshape_size=(maxsize_w, maxsize_h, 1),
+# 	invert_image=False)
 
-(test_images, test_labels) = load_image_dataset(
-	path_dir='D:/Programming/Github_Repo/AI_Doctors/Src/static/test',
-	maxsize=maxsize,
-	reshape_size=(maxsize_w, maxsize_h, 1),
-	invert_image=False)
+# (test_images, test_labels) = load_image_dataset(
+# 	path_dir = os.path.join(dirname, 'static/test'),
+# 	maxsize=maxsize,
+# 	reshape_size=(maxsize_w, maxsize_h, 1),
+# 	invert_image=False)
 
-print(train_images.shape)
+# print(train_images.shape)
 
-print(len(train_labels))
+# print(len(train_labels))
 
-print(train_labels)
+# print(train_labels)
 
 
-print(test_images.shape)
-print(test_labels)
+# print(test_images.shape)
+# print(test_labels)
 
-# scaling the images to values between 0 and 1.
-train_images = train_images / 255.0
+# # scaling the images to values between 0 and 1.
+# train_images = train_images / 255.0
 
-test_images = test_images / 255.0
+# test_images = test_images / 255.0
 
 
 # Setting up the layers.
@@ -116,12 +122,75 @@ model = keras.Sequential([
     keras.layers.Dense(5, activation=tf.nn.softmax)
 ])
 
-
 model.compile(optimizer=sgd, 
-              loss='sparse_categorical_crossentropy',
-              metrics=['accuracy'])
-model.fit(train_images, train_labels, epochs=100)
+			loss='sparse_categorical_crossentropy',
+			metrics=['accuracy'])
 
+# def train():
+# 	(train_images, train_labels) = load_image_dataset(
+# 	path_dir = os.path.join(dirname, 'static/train'),
+# 	maxsize=maxsize,
+# 	reshape_size=(maxsize_w, maxsize_h, 1),
+# 	invert_image=False)
+
+# 	train_images = train_images / 255.0
+
+
+# 	model.fit(train_images, train_labels, epochs=1000)
+
+
+# def test():
+# 	(test_images, test_labels) = load_image_dataset(
+# 	path_dir = os.path.join(dirname, 'static/test'),
+# 	maxsize=maxsize,
+# 	reshape_size=(maxsize_w, maxsize_h, 1),
+# 	invert_image=False)
+
+# 	test_images = test_images / 255.0
+
+# 	test_loss, test_acc = model.evaluate(test_images, test_labels)
+
+# 	print('Test accuracy:', test_acc)
+
+# 	predictions = model.predict(test_images)
+# 	print(predictions)
+
+# 	class_names_ =['Healthy Teeth','Broken Teeth','unknown']
+# 	label = np.argmax(predictions, axis = 1)
+
+# 	for x in label:
+# 		print("s")
+# 		print(x)
+
+# 	sss = class_names_[label[0]]
+# 	result_array = [class_names_[label[0]], str(float(test_acc))]
+# 	# in case of multible test images use this code instead
+# 	# result_array = []
+# 	#   (in for loop)    result_array += [class_names[label[i]],str(float(test_acc))]
+
+# 	print(class_names_[label[0]])
+# 	print(str(float(test_acc)))
+# 	return result_array
+
+(train_images, train_labels) = load_image_dataset(
+path_dir = os.path.join(dirname, 'static/train'),
+maxsize=maxsize,
+reshape_size=(maxsize_w, maxsize_h, 1),
+invert_image=False)
+
+train_images = train_images / 255.0
+
+
+model.fit(train_images, train_labels, epochs=1000)
+
+
+(test_images, test_labels) = load_image_dataset(
+path_dir = os.path.join(dirname, 'static/test'),
+maxsize=maxsize,
+reshape_size=(maxsize_w, maxsize_h, 1),
+invert_image=False)
+
+test_images = test_images / 255.0
 
 test_loss, test_acc = model.evaluate(test_images, test_labels)
 
@@ -129,6 +198,9 @@ print('Test accuracy:', test_acc)
 
 predictions = model.predict(test_images)
 print(predictions)
+
+
+
 # Using matplotlib display images.
 def display_images(images, labels, title = "Default"):
 	plt.title(title)
@@ -142,205 +214,209 @@ def display_images(images, labels, title = "Default"):
 		plt.imshow(images[i], cmap=plt.cm.binary)
 		plt.xlabel(class_names[labels[i]])
 
+# train()
+# test()
 
-#display_images(test_images, np.argmax(predictions, axis = 1))
-#plt.show() # unless we do a plt.show(), the image grid won't appear.
+
+display_images(test_images, np.argmax(predictions, axis = 1))
+plt.show() # unless we do a plt.show(), the image grid won't appear.
 
 # Comparing different model size and how they perform against the challenge.
 
-baseline_model = keras.models.Sequential([
-    	keras.layers.Flatten(input_shape = ( maxsize_w, maxsize_h , 1)),
-  		keras.layers.Dense(128, activation=tf.nn.sigmoid),
-		keras.layers.Dropout(0.25),
-  		keras.layers.Dense(16, activation=tf.nn.sigmoid),
-    	keras.layers.Dense(5, activation=tf.nn.softmax)
-	])
+## all comented ##
+# baseline_model = keras.models.Sequential([
+#     	keras.layers.Flatten(input_shape = ( maxsize_w, maxsize_h , 1)),
+#   		keras.layers.Dense(128, activation=tf.nn.sigmoid),
+# 		keras.layers.Dropout(0.25),
+#   		keras.layers.Dense(16, activation=tf.nn.sigmoid),
+#     	keras.layers.Dense(5, activation=tf.nn.softmax)
+# 	])
 
-baseline_model.compile(optimizer=keras.optimizers.Adam(lr=0.001),
-	loss='sparse_categorical_crossentropy',
-	metrics=['accuracy','sparse_categorical_crossentropy'])
+# baseline_model.compile(optimizer=keras.optimizers.Adam(lr=0.001),
+# 	loss='sparse_categorical_crossentropy',
+# 	metrics=['accuracy','sparse_categorical_crossentropy'])
 
-bigger_model = keras.models.Sequential([
-		#keras.layers.Conv2D(64, 
-		#kernel_size=3, strides=3, padding='same', input_shape=(maxsize_w, maxsize_h, 1)),
-    	keras.layers.Flatten(input_shape = ( maxsize_w, maxsize_h , 1)),
-		keras.layers.Dense(256, activation=tf.nn.relu),
-		keras.layers.Dropout(0.25),
-  		keras.layers.Dense(128, activation=tf.nn.relu),
-		keras.layers.Dropout(0.25),
-		keras.layers.Dense(64, activation=tf.nn.relu),
-		keras.layers.Dropout(0.5),
-		keras.layers.Dense(16, activation=tf.nn.relu),
-    	keras.layers.Dense(5, activation=tf.nn.softmax)
-	])
+# bigger_model = keras.models.Sequential([
+# 		#keras.layers.Conv2D(64, 
+# 		#kernel_size=3, strides=3, padding='same', input_shape=(maxsize_w, maxsize_h, 1)),
+#     	keras.layers.Flatten(input_shape = ( maxsize_w, maxsize_h , 1)),
+# 		keras.layers.Dense(256, activation=tf.nn.relu),
+# 		keras.layers.Dropout(0.25),
+#   		keras.layers.Dense(128, activation=tf.nn.relu),
+# 		keras.layers.Dropout(0.25),
+# 		keras.layers.Dense(64, activation=tf.nn.relu),
+# 		keras.layers.Dropout(0.5),
+# 		keras.layers.Dense(16, activation=tf.nn.relu),
+#     	keras.layers.Dense(5, activation=tf.nn.softmax)
+# 	])
 
-bigger_model1 = keras.models.Sequential([
-    	keras.layers.Flatten(input_shape = ( maxsize_w, maxsize_h , 1)),
-  		keras.layers.Dense(128, activation=tf.nn.relu),
-		keras.layers.Dropout(0.25),
-		keras.layers.Dense(64, activation=tf.nn.relu),
-		keras.layers.Dropout(0.5),
-		keras.layers.Dense(16, activation=tf.nn.relu),
-    	keras.layers.Dense(5, activation=tf.nn.softmax)
-	])
+# bigger_model1 = keras.models.Sequential([
+#     	keras.layers.Flatten(input_shape = ( maxsize_w, maxsize_h , 1)),
+#   		keras.layers.Dense(128, activation=tf.nn.relu),
+# 		keras.layers.Dropout(0.25),
+# 		keras.layers.Dense(64, activation=tf.nn.relu),
+# 		keras.layers.Dropout(0.5),
+# 		keras.layers.Dense(16, activation=tf.nn.relu),
+#     	keras.layers.Dense(5, activation=tf.nn.softmax)
+# 	])
 
-bigger_model1.compile(optimizer=keras.optimizers.Adam(lr=0.001),
-	loss='sparse_categorical_crossentropy',
-	metrics=['accuracy','sparse_categorical_crossentropy'])
+# bigger_model1.compile(optimizer=keras.optimizers.Adam(lr=0.001),
+# 	loss='sparse_categorical_crossentropy',
+# 	metrics=['accuracy','sparse_categorical_crossentropy'])
 
 
-smaller_model1 = keras.models.Sequential([
-    	keras.layers.Flatten(input_shape = ( maxsize_w, maxsize_h , 1)),
- 		keras.layers.Dense(64, activation=tf.nn.relu),
-    	keras.layers.Dense(5, activation=tf.nn.softmax)
-	])
+# smaller_model1 = keras.models.Sequential([
+#     	keras.layers.Flatten(input_shape = ( maxsize_w, maxsize_h , 1)),
+#  		keras.layers.Dense(64, activation=tf.nn.relu),
+#     	keras.layers.Dense(5, activation=tf.nn.softmax)
+# 	])
 
-smaller_model1.compile(optimizer='adam',
-	loss='sparse_categorical_crossentropy',
-	metrics=['accuracy','sparse_categorical_crossentropy'])
+# smaller_model1.compile(optimizer='adam',
+# 	loss='sparse_categorical_crossentropy',
+# 	metrics=['accuracy','sparse_categorical_crossentropy'])
 
-smaller_model = keras.models.Sequential([
-    	keras.layers.Flatten(input_shape = ( maxsize_w, maxsize_h , 1)),
-  		keras.layers.Dense(512, activation=tf.nn.relu),
-		keras.layers.Dropout(0.25),
-		keras.layers.Dense(256, activation=tf.nn.relu),
-		keras.layers.Dropout(0.25),
-  		keras.layers.Dense(128, activation=tf.nn.relu),
-		keras.layers.Dense(16, activation=tf.nn.relu),
-    	keras.layers.Dense(5, activation=tf.nn.softmax)
-	])
+# smaller_model = keras.models.Sequential([
+#     	keras.layers.Flatten(input_shape = ( maxsize_w, maxsize_h , 1)),
+#   		keras.layers.Dense(512, activation=tf.nn.relu),
+# 		keras.layers.Dropout(0.25),
+# 		keras.layers.Dense(256, activation=tf.nn.relu),
+# 		keras.layers.Dropout(0.25),
+#   		keras.layers.Dense(128, activation=tf.nn.relu),
+# 		keras.layers.Dense(16, activation=tf.nn.relu),
+#     	keras.layers.Dense(5, activation=tf.nn.softmax)
+# 	])
 
-vgg_style_model = keras.models.Sequential([
-	keras.layers.Conv2D(128, (3, 3), activation='relu', input_shape = (maxsize_w, maxsize_h, 1)),
-	keras.layers.Conv2D(64, (3, 3), activation='relu'),
-	keras.layers.MaxPooling2D(pool_size=(2, 2)),
-	keras.layers.Dropout(0.25),
-	keras.layers.Conv2D(64, (3, 3), activation='relu'),
-	keras.layers.Conv2D(64, (3, 3), activation='relu'),
-	keras.layers.MaxPooling2D(pool_size=(2, 2)),
-	keras.layers.Dropout(0.25),
-	keras.layers.Flatten(),
-	keras.layers.Dense(128, activation='relu'),
-	keras.layers.Dropout(0.5),
-	keras.layers.Dense(5, activation='softmax')
-	])
-datagen = keras.preprocessing.image.ImageDataGenerator(
-        #zoom_range=0.2, # randomly zoom into images
-		featurewise_center=False,
-        #width_shift_range=0.2,  # randomly shift images horizontally (fraction of total width)
-        #height_shift_range=0.2,  # randomly shift images vertically (fraction of total height)
-        horizontal_flip=False,  # randomly flip images
-        vertical_flip=False)  # randomly flip images
-#datagen.fit(train_images)
-sgd = keras.optimizers.SGD(lr=0.01, decay=1e-5, momentum=0.7, nesterov=True)
-vgg_style_model.compile(loss='sparse_categorical_crossentropy',
- optimizer=keras.optimizers.Adam(lr=0.001),
- metrics=['accuracy','sparse_categorical_crossentropy'])
+# vgg_style_model = keras.models.Sequential([
+# 	keras.layers.Conv2D(128, (3, 3), activation='relu', input_shape = (maxsize_w, maxsize_h, 1)),
+# 	keras.layers.Conv2D(64, (3, 3), activation='relu'),
+# 	keras.layers.MaxPooling2D(pool_size=(2, 2)),
+# 	keras.layers.Dropout(0.25),
+# 	keras.layers.Conv2D(64, (3, 3), activation='relu'),
+# 	keras.layers.Conv2D(64, (3, 3), activation='relu'),
+# 	keras.layers.MaxPooling2D(pool_size=(2, 2)),
+# 	keras.layers.Dropout(0.25),
+# 	keras.layers.Flatten(),
+# 	keras.layers.Dense(128, activation='relu'),
+# 	keras.layers.Dropout(0.5),
+# 	keras.layers.Dense(5, activation='softmax')
+# 	])
+# datagen = keras.preprocessing.image.ImageDataGenerator(
+#         #zoom_range=0.2, # randomly zoom into images
+# 		featurewise_center=False,
+#         #width_shift_range=0.2,  # randomly shift images horizontally (fraction of total width)
+#         #height_shift_range=0.2,  # randomly shift images vertically (fraction of total height)
+#         horizontal_flip=False,  # randomly flip images
+#         vertical_flip=False)  # randomly flip images
+# #datagen.fit(train_images)
+# sgd = keras.optimizers.SGD(lr=0.01, decay=1e-5, momentum=0.7, nesterov=True)
+# vgg_style_model.compile(loss='sparse_categorical_crossentropy',
+#  optimizer=keras.optimizers.Adam(lr=0.001),
+#  metrics=['accuracy','sparse_categorical_crossentropy'])
 
-def plot_history(histories, key='sparse_categorical_crossentropy'):
-  plt.figure(figsize=(16,10))
+# def plot_history(histories, key='sparse_categorical_crossentropy'):
+#   plt.figure(figsize=(16,10))
     
-  for name, history in histories:
-    val = plt.plot(history.epoch, history.history['val_'+key],
-                   '--', label=name.title()+' Val')
-    plt.plot(history.epoch, history.history[key], color=val[0].get_color(),
-             label=name.title()+' Train')
+#   for name, history in histories:
+#     val = plt.plot(history.epoch, history.history['val_'+key],
+#                    '--', label=name.title()+' Val')
+#     plt.plot(history.epoch, history.history[key], color=val[0].get_color(),
+#              label=name.title()+' Train')
 
-  plt.xlabel('Epochs')
-  plt.ylabel(key.replace('_',' ').title())
-  plt.legend()
-  plt.xlim([0, max(history.epoch)])
-  plt.ylim([0, 1])
+#   plt.xlabel('Epochs')
+#   plt.ylabel(key.replace('_',' ').title())
+#   plt.legend()
+#   plt.xlim([0, max(history.epoch)])
+#   plt.ylim([0, 1])
 
-#keras.optimizers.Adam(lr=0.001)
-bigger_model.compile(optimizer='adam',
-	loss='sparse_categorical_crossentropy',
-	metrics=['accuracy','sparse_categorical_crossentropy'])
+# #keras.optimizers.Adam(lr=0.001)
+# bigger_model.compile(optimizer='adam',
+# 	loss='sparse_categorical_crossentropy',
+# 	metrics=['accuracy','sparse_categorical_crossentropy'])
 
-baseline_model.compile(optimizer='adam',
-	loss='sparse_categorical_crossentropy',
-	metrics=['accuracy','sparse_categorical_crossentropy'])
+# baseline_model.compile(optimizer='adam',
+# 	loss='sparse_categorical_crossentropy',
+# 	metrics=['accuracy','sparse_categorical_crossentropy'])
 
-smaller_model.compile(
-	optimizer='adam',
-	loss='sparse_categorical_crossentropy',
-	metrics=['accuracy','sparse_categorical_crossentropy'])
+# smaller_model.compile(
+# 	optimizer='adam',
+# 	loss='sparse_categorical_crossentropy',
+# 	metrics=['accuracy','sparse_categorical_crossentropy'])
 
 
-bigger_model1_history = bigger_model1.fit(train_images, train_labels,
-	epochs=400,
-	validation_data=(test_images, test_labels),
-	verbose=2,
-	workers=4)
-
-# smaller_model1_history = smaller_model1.fit(train_images, train_labels,
-# 	epochs=150,
-# 	validation_data=(test_images, test_labels),
-# 	verbose=2,
-# 	workers=4)
-
-bigger_model_history = bigger_model.fit(train_images, train_labels,
-	epochs=400,
-	validation_data=(test_images, test_labels),
-	verbose=2,
-	workers=4)
-
-baseline_model_history = baseline_model.fit(train_images, train_labels,
-	epochs=400,
-	validation_data=(test_images, test_labels),
-	verbose=2,
-	workers=4)
-# bigger_model_history = bigger_model.fit_generator(datagen.flow(train_images, train_labels),
-# 	epochs=100,
-# 	validation_data=(test_images, test_labels),
-# 	verbose=2,
-# 	workers=4)
-# smaller_model_history = smaller_model.fit_generator(datagen.flow(train_images, train_labels),
+# bigger_model1_history = bigger_model1.fit(train_images, train_labels,
 # 	epochs=400,
 # 	validation_data=(test_images, test_labels),
 # 	verbose=2,
 # 	workers=4)
-# smaller_model_history = smaller_model.fit(train_images, train_labels,
-# 	epochs=60,
-# 	validation_data=(test_images, test_labels),
-# 	verbose=2,
-# 	workers=4)
-# 
 
-# vgg_style_model_history = vgg_style_model.fit_generator(
-# 	datagen.flow(train_images, train_labels),
-# 	#train_images, train_labels,
-# 	epochs=120,
+# # smaller_model1_history = smaller_model1.fit(train_images, train_labels,
+# # 	epochs=150,
+# # 	validation_data=(test_images, test_labels),
+# # 	verbose=2,
+# # 	workers=4)
+
+# bigger_model_history = bigger_model.fit(train_images, train_labels,
+# 	epochs=400,
 # 	validation_data=(test_images, test_labels),
 # 	verbose=2,
 # 	workers=4)
 
-plot_history([
-              #('smaller', smaller_model1_history),
-              ('bigger', bigger_model1_history),
-			  ('baseline', baseline_model_history),
-			  ('bigger2', bigger_model_history)
+# baseline_model_history = baseline_model.fit(train_images, train_labels,
+# 	epochs=400,
+# 	validation_data=(test_images, test_labels),
+# 	verbose=2,
+# 	workers=4)
+# # bigger_model_history = bigger_model.fit_generator(datagen.flow(train_images, train_labels),
+# # 	epochs=100,
+# # 	validation_data=(test_images, test_labels),
+# # 	verbose=2,
+# # 	workers=4)
+# # smaller_model_history = smaller_model.fit_generator(datagen.flow(train_images, train_labels),
+# # 	epochs=400,
+# # 	validation_data=(test_images, test_labels),
+# # 	verbose=2,
+# # 	workers=4)
+# # smaller_model_history = smaller_model.fit(train_images, train_labels,
+# # 	epochs=60,
+# # 	validation_data=(test_images, test_labels),
+# # 	verbose=2,
+# # 	workers=4)
+# # 
+
+# # vgg_style_model_history = vgg_style_model.fit_generator(
+# # 	datagen.flow(train_images, train_labels),
+# # 	#train_images, train_labels,
+# # 	epochs=120,
+# # 	validation_data=(test_images, test_labels),
+# # 	verbose=2,
+# # 	workers=4)
+
+# plot_history([
+#               #('smaller', smaller_model1_history),
+#               ('bigger', bigger_model1_history),
+# 			  ('baseline', baseline_model_history),
+# 			  ('bigger2', bigger_model_history)
 			  
-			  #('vgg', vgg_style_model_history)
-			  ])
+# 			  #('vgg', vgg_style_model_history)
+# 			  ])
 
-#plot_history([('smaller', smaller_model_history)])
+# #plot_history([('smaller', smaller_model_history)])
 
-#predictions = smaller_model.predict(test_images)
-predictions2 = baseline_model.predict(test_images)
+# #predictions = smaller_model.predict(test_images)
+# predictions2 = baseline_model.predict(test_images)
 
-# predictions3 = vgg_style_model.predict(test_images)
-#display_images(test_images.reshape((len(test_images), maxsize_w, maxsize_h)),
-# np.argmax(predictions3, axis = 1), title = "vgg")
+# # predictions3 = vgg_style_model.predict(test_images)
+# #display_images(test_images.reshape((len(test_images), maxsize_w, maxsize_h)),
+# # np.argmax(predictions3, axis = 1), title = "vgg")
+
+# # display_images(test_images.reshape((len(test_images), maxsize_w, maxsize_h)),
+# #  np.argmax(predictions, axis = 1), title = "small")
 
 # display_images(test_images.reshape((len(test_images), maxsize_w, maxsize_h)),
-#  np.argmax(predictions, axis = 1), title = "small")
+#  np.argmax(predictions2, axis = 1), title = "")
 
-display_images(test_images.reshape((len(test_images), maxsize_w, maxsize_h)),
- np.argmax(predictions2, axis = 1), title = "")
+# #display_images(test_images, np.argmax(predictions, axis = 1), title = "small")
+# #print(predictions)
+# # print(predictions2)
 
-#display_images(test_images, np.argmax(predictions, axis = 1), title = "small")
-#print(predictions)
-# print(predictions2)
-
-plt.show()
+# plt.show()
