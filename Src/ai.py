@@ -3,6 +3,7 @@
 ## test_images and test_labels is testing data set for validating the model's performance against unseen data.##
 
 # TensorFlow and tf.keras
+from matplotlib import *
 import tensorflow as tf
 from tensorflow import keras
 
@@ -11,15 +12,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import glob, os
 import re
-
+import json
+import random
 # Pillow
 import PIL
 from PIL import Image
-
 import os
 import glob
-from io import StringIO
 from io import BytesIO
+
+# Application start function for flask.
+def start_app():
+        app.run(host='localhost', port=5000, debug=True)
+
 # print os.getcwd()
 dirname = os.path.dirname(__file__)
 print (os.getcwd())
@@ -27,7 +32,7 @@ print (dirname)
 print (os.path.join(os.getcwd(), 'test'))
 print (__file__)
 
-from flask import Flask, send_file, render_template, request, redirect, url_for
+from flask import *
 app = Flask(__name__)
 
 @app.route("/") # CHECK THIS line
@@ -39,7 +44,6 @@ def hello_world():
 @app.route("/start", methods = ['GET'])
 def start():
 #     try:
-        train()
         # start()
 #     except:
 #         return redirect('/error')
@@ -47,12 +51,11 @@ def start():
 #     print (file_name)
 #     return render_template("show.html", title='AI', file_name = file_name)
         # return render_template("show.html", title='AI', file_name = "sss")
-        return "sss"
+        return test()
 
 @app.route("/test", methods = ['GET'])
 def RoundTest():
 #     try:
-        
         # start()
 #     except:
 #         return redirect('/error')
@@ -73,10 +76,9 @@ def upload_file():
    if request.method == 'POST':
       type = request.form['type']
       globing(os.path.join(dirname, 'static/'+type))
-      list = request.files.getlist("file[]")
-      for x in list:
-        f = x
-        f.save(os.path.join(dirname, 'static/'+type+'/'+f.filename) )
+      for file in request.files.getlist("file[]"):
+        filename = "unknown-"+f"{random.randint(0,100)}"+".png"    
+        file.save(os.path.join(dirname, 'static/'+type+'/'+filename))
       return redirect('/')
 
 @app.route("/error")
@@ -95,7 +97,7 @@ def globing(path):
 
 # Use Pillow library to convert an input jpeg to a 8 bit grey scale image array for processing.
 def greyscaling(path, maxsize):
-        img = Image.open(path).convert('L')   # convert image to 8-bit grayscale
+        img= Image.open(path).convert('L')   # convert image to 8-bit grayscale
         # Make aspect ratio as 1:1, by applying image crop.
     # Please note, croping works for this data set, but in general one
     # needs to locate the subject and then crop or scale accordingly.
@@ -119,6 +121,9 @@ def load_image_dataset(path_dir, maxsize):
                 elif re.match('Broken_Teeth*.*', file):
                         images.append(img)
                         labels.append(1)
+                elif re.match("unknown*.*",file):
+                        images.append(img)
+                        labels.append(2)
         return (np.asarray(images), np.asarray(labels))
 
 def display_images(images, labels):
@@ -141,7 +146,7 @@ model = keras.Sequential([
         keras.layers.Flatten(input_shape=(100, 100)),
         keras.layers.Dense(128, activation=tf.nn.sigmoid),
         keras.layers.Dense(16, activation=tf.nn.sigmoid),
-        keras.layers.Dense(2, activation=tf.nn.softmax)
+        keras.layers.Dense(5, activation=tf.nn.softmax)
 ])
 sgd = keras.optimizers.SGD(lr=0.01, decay=1e-5, momentum=0.7, nesterov=True)
 model.compile(optimizer=sgd,
@@ -153,20 +158,26 @@ def train():
         model.fit(train_images, train_labels, epochs=500)
         train_loss, train_acc = model.evaluate(train_images, train_labels)
         print('Train accuracy:', train_acc,train_loss)
+        return test()
 
 def test():
         (test_images, test_labels) = load_image_dataset(os.path.join(dirname, 'static/test'), maxsize)
         test_images = test_images / 255.0
+        model.fit(test_images, test_labels, epochs=100)
         test_loss, test_acc = model.evaluate(test_images, test_labels)
         predictions = model.predict(test_images)
-
-        class_names=['Healthy Teeth','Broken Teeth']
+        class_names=['Healthy Teeth','Broken Teeth','Needs training']
         label = np.argmax(predictions, axis = 1)
-
+        #print('Test accuracy:', test_acc,test_loss)
+        # for i in range(len(label)):  # BROKEN CODE!
+        #         if class_names[label[i-1]] == 'Needs training':
+                        
+        #         else:
+        #                 return class_names[label[i]]
 
 
         # return "ACC: " + float(str(test_acc)) + " - LOSS: " + float(str(test_loss))
-        return class_names[label[0]]
+        # return class_names[label[0]]
 
 
 def start():
@@ -189,5 +200,6 @@ def start():
         saving = plt.savefig(os.path.join(dirname, 'static/rrr.png'))
         img = BytesIO(saving)
         img.seek(0)
-        return send_file(img, mimetype='image/png')
+        return send_file(img, mimetype='image/*')
 
+start_app() # This should always be the last line of your code.
