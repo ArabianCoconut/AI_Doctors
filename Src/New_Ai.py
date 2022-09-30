@@ -126,51 +126,51 @@ model.compile(optimizer=sgd,
 			loss='sparse_categorical_crossentropy',
 			metrics=['accuracy'])
 
-# def train():
-# 	(train_images, train_labels) = load_image_dataset(
-# 	path_dir = os.path.join(dirname, 'static/train'),
-# 	maxsize=maxsize,
-# 	reshape_size=(maxsize_w, maxsize_h, 1),
-# 	invert_image=False)
+def train():
+	(train_images, train_labels) = load_image_dataset(
+	path_dir = os.path.join(dirname, 'static/train'),
+	maxsize=maxsize,
+	reshape_size=(maxsize_w, maxsize_h, 1),
+	invert_image=False)
 
-# 	train_images = train_images / 255.0
-
-
-# 	model.fit(train_images, train_labels, epochs=1000)
+	train_images = train_images / 255.0
 
 
-# def test():
-# 	(test_images, test_labels) = load_image_dataset(
-# 	path_dir = os.path.join(dirname, 'static/test'),
-# 	maxsize=maxsize,
-# 	reshape_size=(maxsize_w, maxsize_h, 1),
-# 	invert_image=False)
+	model.fit(train_images, train_labels, epochs=1000)
 
-# 	test_images = test_images / 255.0
 
-# 	test_loss, test_acc = model.evaluate(test_images, test_labels)
+def test():
+	(test_images, test_labels) = load_image_dataset(
+	path_dir = os.path.join(dirname, 'static/test'),
+	maxsize=maxsize,
+	reshape_size=(maxsize_w, maxsize_h, 1),
+	invert_image=False)
 
-# 	print('Test accuracy:', test_acc)
+	test_images = test_images / 255.0
 
-# 	predictions = model.predict(test_images)
-# 	print(predictions)
+	test_loss, test_acc = model.evaluate(test_images, test_labels)
 
-# 	class_names_ =['Healthy Teeth','Broken Teeth','unknown']
-# 	label = np.argmax(predictions, axis = 1)
+	print('Test accuracy:', test_acc)
 
-# 	for x in label:
-# 		print("s")
-# 		print(x)
+	predictions = model.predict(test_images)
+	print(predictions)
 
-# 	sss = class_names_[label[0]]
-# 	result_array = [class_names_[label[0]], str(float(test_acc))]
-# 	# in case of multible test images use this code instead
-# 	# result_array = []
-# 	#   (in for loop)    result_array += [class_names[label[i]],str(float(test_acc))]
+	class_names_ =['Healthy Teeth','Broken Teeth','unknown']
+	label = np.argmax(predictions, axis = 1)
 
-# 	print(class_names_[label[0]])
-# 	print(str(float(test_acc)))
-# 	return result_array
+	for x in label:
+		print("s")
+		print(x)
+
+	sss = class_names_[label[0]]
+	result_array = [class_names_[label[0]], str(float(test_acc))]
+	# in case of multible test images use this code instead
+	# result_array = []
+	#   (in for loop)    result_array += [class_names[label[i]],str(float(test_acc))]
+
+	print(class_names_[label[0]])
+	print(str(float(test_acc)))
+	return result_array
 
 (train_images, train_labels) = load_image_dataset(
 path_dir = os.path.join(dirname, 'static/train'),
