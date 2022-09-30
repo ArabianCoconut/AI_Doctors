@@ -20,6 +20,10 @@ import os
 import glob
 from io import StringIO
 from io import BytesIO
+
+import base64
+import json
+
 # print os.getcwd()
 dirname = os.path.dirname(__file__)
 print (os.getcwd())
@@ -78,6 +82,22 @@ def upload_file():
         f = x
         f.save(os.path.join(dirname, 'static/'+type+'/'+f.filename) )
       return redirect('/')
+
+@app.route('/api/uploader', methods = ['GET', 'POST'])
+def api_upload_file():
+
+   if request.method == 'POST':
+
+      img_base64 = request.form['img']
+      img_base64 = bytes(img_base64, encoding='utf-8')
+      globing(os.path.join(dirname, 'static/test'))
+      with open("static/test/imageToSave.png", "wb") as fh:
+        fh.write(base64.decodebytes(img_base64))
+
+      result = test()
+      data_rx={"Result":f"{result[0]}","Accuracy":f"{result[0]}"}
+
+      return json.dumps(data_rx)
 
 @app.route("/error")
 def error():
