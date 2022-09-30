@@ -1,4 +1,3 @@
-
 import glob, os
 import re
 
@@ -12,101 +11,6 @@ import matplotlib.pyplot as plt
 
 import PIL
 from PIL import Image
-<<<<<<< HEAD
-=======
-import os
-import glob
-from io import BytesIO
-
-import base64
-import json
-
-# print os.getcwd()
-dirname = os.path.dirname(__file__)
-print (os.getcwd())
-print (dirname)
-print (os.path.join(os.getcwd(), 'test'))
-print (__file__)
-
-from flask import *
-app = Flask(__name__)
-
-@app.route("/") # CHECK THIS line
-def hello_world():
-    file_name = os.path.join(dirname, 'rrr.png')
-    print (file_name)
-    return render_template("index.html", title='AI', file_name = file_name)
-
-@app.route("/start", methods = ['GET'])
-def start():
-#     try:
-        # start()
-#     except:
-#         return redirect('/error')
-#     file_name = os.path.join(dirname, 'rrr.png')
-#     print (file_name)
-#     return render_template("show.html", title='AI', file_name = file_name)
-        # return render_template("show.html", title='AI', file_name = "sss")
-        return test()
-
-@app.route("/test", methods = ['GET'])
-def RoundTest():
-#     try:
-        # start()
-#     except:
-#         return redirect('/error')
-#     file_name = os.path.join(dirname, 'rrr.png')
-#     print (file_name)
-#     return render_template("show.html", title='AI', file_name = file_name)
-        # return render_template("show.html", title='AI', file_name = "sss")
-        return test()
-
-
-@app.route("/train", methods = ['GET'])
-def routeTrain():
-        train()
-        return "Training Done"
-
-@app.route('/uploader', methods = ['GET', 'POST'])
-def upload_file():
-   if request.method == 'POST':
-      type = request.form['type']
-      globing(os.path.join(dirname, 'static/'+type))
-      for file in request.files.getlist("file[]"):
-        filename = "unknown-"+f"{random.randint(0,100)}"+".png"    
-        file.save(os.path.join(dirname, 'static/'+type+'/'+filename))
-      return redirect('/')
-
-@app.route('/api/uploader', methods = ['GET', 'POST'])
-def api_upload_file():
-
-   if request.method == 'POST':
-
-      img_base64 = request.form['img']
-      img_base64 = bytes(img_base64, encoding='utf-8')
-      globing(os.path.join(dirname, 'static/test'))
-      with open("static/test/imageToSave.png", "wb") as fh:
-        fh.write(base64.decodebytes(img_base64))
-
-      result = test()
-      data_rx={"Result":f"{result[0][0]}","Accuracy":f"{result[0][0]}"}
-
-      return json.dumps(data_rx)
-
-@app.route("/error")
-def error():
-    file_name = os.path.join(dirname, 'rrr.png')
-    print (file_name)
-    return render_template("error.html", title='AI', file_name = file_name)
-
-
-
-def globing(path):
-    files = glob.glob(path+'/*')
-    for f in files:
-        os.remove(f)
-
->>>>>>> 6f0825d222d0362508b72da323816e53c3c9a48f
 
 # Use Pillow library to convert an input jpeg to a 8 bit grey scale image array for processing.
 def jpeg_to_8_bit_greyscale(path, maxsize):
@@ -239,38 +143,8 @@ def display_images(images, labels, title = "Default"):
 		plt.xlabel(class_names[labels[i]])
 
 
-<<<<<<< HEAD
 #display_images(test_images, np.argmax(predictions, axis = 1))
 #plt.show() # unless we do a plt.show(), the image grid won't appear.
-=======
-        # abd cahges for the return in the end
-        # result_array = []
-        #   (in for loop)    result_array += [class_names[label[i]],str(float(test_acc))]
-        # return result_array
-
-
-def start():
-        (test_images, test_labels) = load_image_dataset(os.path.join(dirname, 'static/test'), maxsize)
-        (train_images, train_labels) = load_image_dataset(os.path.join(dirname, 'static/train'), maxsize)
-        train_images = train_images / 255.0
-        test_images = test_images / 255.0
-        model.fit(train_images, train_labels, epochs=500)
-        test_loss, test_acc = model.evaluate(test_images, test_labels)
-        train_loss, train_acc = model.evaluate(train_images, train_labels)
-        predictions = model.predict(test_images)
-        predictions_1=model.predict(train_images)
-        print('Test accuracy:', test_acc,test_loss)
-        print('Train accuracy:', train_acc,train_loss)
-       # print(predictions)
-       # print(predictions_1)
-       # display_images(train_images,np.argmax(predictions_1, axis = 1))
-       # plt.show()
-        display_images(test_images, np.argmax(predictions, axis = 1))
-        saving = plt.savefig(os.path.join(dirname, 'static/rrr.png'))
-        img = BytesIO(saving)
-        img.seek(0)
-        return send_file(img, mimetype='image/*')
->>>>>>> 6f0825d222d0362508b72da323816e53c3c9a48f
 
 # Comparing different model size and how they perform against the challenge.
 
