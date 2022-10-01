@@ -5,8 +5,7 @@ import base64
 import json
 import glob
 from flask import *
-import New_Ai
-from New_Ai import train, test
+from New_Ai import *
 
 # print os.getcwd()
 dirname = os.path.dirname(__file__)
@@ -18,7 +17,7 @@ print (__file__)
 app = Flask(__name__)
 
 def start_app():
-		app.run(host="localhost", port=5000, debug=True)
+		app.run(host="0.0.0.0", port=61261, debug=True)
 
 @app.route("/")
 def hello_world():
