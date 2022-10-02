@@ -5,7 +5,7 @@
 
 
 # TensorFlow and tf.keras
-from email.mime import base
+from asyncore import write
 import tensorflow as tf
 from tensorflow import keras
 
@@ -15,23 +15,11 @@ import matplotlib.pyplot as plt
 import glob, os
 import re
 
-# Pillow
+# PILLOW
 import PIL
-from PIL import Image
-# TensorFlow and tf.keras
-import tensorflow as tf
-from tensorflow import keras
-
-# Helper libraries
-import numpy as np
-import matplotlib.pyplot as plt
-import glob, os
-import re
-
-# Pillow
-# import PIL
-# from PIL import Image
 from PIL import *
+from PIL import Image
+
 
 direname= os.path.dirname(__file__)
 maxsize = 50,50
@@ -120,14 +108,7 @@ def train():
 	reshape_size=(maxsize_w, maxsize_h, 1),
 	invert_image=False)
 
-        (test_images, test_labels) = load_image_dataset(
-	path_dir= os.path.join(direname, 'static/train_test'),
-	maxsize=maxsize,
-	reshape_size=(maxsize_w, maxsize_h, 1),
-	invert_image=False)
-
         train_images = train_images / 255.0
-        test_images = test_images / 255.0
 
 
         # KERAS preprocessing of image and ImageDataGenerator
@@ -166,38 +147,42 @@ def test():
 	invert_image=False)
 
         test_images = test_images / 255.0
-
-        test_acc=bigger_model.evaluate(test_images, test_labels)
+        test_acc_Bigger=bigger_model.evaluate(test_images, test_labels)
         test_acc_small=smaller_model.evaluate(test_images, test_labels)
         predictions= bigger_model.predict(test_images)
         small_prediction=smaller_model.predict(test_images)
         print(bigger_model.summary())
-        print('Test accuracy:', test_acc)
+        print('Test accuracy:', test_acc_Bigger)
         print('Test for small model accuracy:', test_acc_small)
         print(predictions)
+        print(small_prediction)
         print(smaller_model.summary())
-
         textLabels = np.argmax(predictions, axis = 1)
 
         # for x in label:
         #         print("s")
         #         print(x)
 
-        sss = class_names[textLabels[0]]
-        result_array = [class_names[textLabels[0]], str(float(test_acc[0]))]
+        # sss = class_names[textLabels[0]]
+
+        Final_Average_Accuracy = (sum(test_acc_Bigger) + sum(test_acc_small))/2
+        result_array = [class_names[textLabels[0]], str(Final_Average_Accuracy)]
+        print("Test accuracy Bigger model:", test_acc_Bigger)
+        print("Test accuracy for smaller model:", test_acc_small)
         # in case of multible test images use this code instead
         # result_array = []
         #   (in for loop)    result_array += [class_names[label[i]],str(float(test_acc))]
 
         print(class_names[textLabels[0]])
-        print(str(float(test_acc[0])))
+        print("Final_Average_Accuracy: "+str(Final_Average_Accuracy))
+     #   print(str(float(Final_Average_Accuracy[0])))
         return result_array
 
         #display_images(test_images, test_labels, title="Test Images")
         # display_images(test_images.reshape((len(test_images), maxsize_w, maxsize_h)),np.argmax(predictions, axis = 1), title = "small")
         # plt.show()
 
-# train()
-# test()
+train()
+test()
 
 
