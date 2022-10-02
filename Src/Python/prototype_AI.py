@@ -18,19 +18,6 @@ import re
 # Pillow
 import PIL
 from PIL import Image
-# TensorFlow and tf.keras
-import tensorflow as tf
-from tensorflow import keras
-
-# Helper libraries
-import numpy as np
-import matplotlib.pyplot as plt
-import glob, os
-import re
-
-# Pillow
-import PIL
-from PIL import Image
 
 direname= os.path.dirname(__file__)
 maxsize = 50,50
@@ -87,13 +74,13 @@ def display_images(images, labels,title="Default"):
 
 
 (train_images, train_labels) = load_image_dataset(
-	path_dir= os.path.join(direname, 'static/train'),
+	path_dir= os.path.join(direname, '/static/train'),
 	maxsize=maxsize,
 	reshape_size=(maxsize_w, maxsize_h, 1),
 	invert_image=False)
 
 (test_images, test_labels) = load_image_dataset(
-	path_dir= os.path.join(direname, 'static/test'),
+	path_dir= os.path.join(direname, '/static/test'),
 	maxsize=maxsize,
 	reshape_size=(maxsize_w, maxsize_h, 1),
 	invert_image=False)
