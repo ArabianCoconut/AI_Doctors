@@ -161,8 +161,7 @@ def test():
 
         # sss = class_names[textLabels[0]]
 
-        Final_Average_Accuracy = (sum(test_acc_Bigger) + sum(test_acc_small))/2
-        result_array = [class_names[textLabels[0]], str(Final_Average_Accuracy)]
+        result_array = [class_names[textLabels[0]], str(test_acc_small[0]), str(test_acc_Bigger[0])]
         print("Test accuracy Bigger model:", test_acc_Bigger)
         print("Test accuracy for smaller model:", test_acc_small)
         # in case of multible test images use this code instead
@@ -170,7 +169,7 @@ def test():
         #   (in for loop)    result_array += [class_names[label[i]],str(float(test_acc))]
 
         print(class_names[textLabels[0]])
-        print("Final_Average_Accuracy: "+str(Final_Average_Accuracy))
+        print("Final_Average_Accuracy: "+str(test_acc_small[0]))
      #   print(str(float(Final_Average_Accuracy[0])))
         return result_array
 

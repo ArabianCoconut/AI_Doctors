@@ -51,7 +51,7 @@ def api_upload_file():
     #     fh.write(base64.decodebytes(img_base64))
    
     result = test()
-    data_rx={"Result":f"{result[0]}","Accuracy":f"{result[1]}"}
+    data_rx={"Result":f"{result[0]}","Accuracy_Smaller":f"{result[1]}","Accuracy_Bigger":f"{result[2]}"}
 
     return json.dumps(data_rx)
 
