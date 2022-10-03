@@ -2,10 +2,7 @@
 #https://developer.ibm.com/articles/image-recognition-challenge-with-tensorflow-and-keras-pt2/
 
 # NOTE TO developer: Do not change any values or the AI wont work
-
-
 # TensorFlow and tf.keras
-from asyncore import write
 import tensorflow as tf
 from tensorflow import keras
 
@@ -14,7 +11,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import glob, os
 import re
-
 # PILLOW
 import PIL
 from PIL import *
@@ -182,7 +178,7 @@ def test():
         # display_images(test_images.reshape((len(test_images), maxsize_w, maxsize_h)),np.argmax(predictions, axis = 1), title = "small")
         # plt.show()
 
-train()
-test()
+# train()
+# test()
 
 
